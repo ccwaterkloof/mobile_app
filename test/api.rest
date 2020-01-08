@@ -1,0 +1,16 @@
+@team = 5e0daf48a449f41e2fe403fc
+@board = RnN9JX0z
+@current = 5e0dafbf4c13d83b0d74204c
+@jannie = 50a4af9f5eed589f7300178a
+
+GET https://api.trello.com/1/members/jannietheunissen/boards?key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+GET https://api.trello.com/1/boards/{{board}}/cards?filter=visible&?key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc,due&attachments=true&attachment_fields=url&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
