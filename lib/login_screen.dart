@@ -7,7 +7,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _username = TextEditingController();
   final _password = TextEditingController();
   LoginStatus _status = LoginStatus.Ready;
 
@@ -21,13 +20,8 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text("Email"),
-              TextField(
-                controller: _username,
-                autocorrect: false,
-                keyboardType: TextInputType.emailAddress,
-                autofocus: true,
-              ),
+              Text(
+                  "CCW prayer information is not publically available. If you know our password, please enter it here to unlock the app."),
               SizedBox(height: 20, width: 0),
               Text("Password"),
               TextField(
@@ -42,7 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     : () async {
                         await tryLogin();
                       },
-                child: Text('Login'),
+                child: Text('Unlock'),
               ),
               SizedBox(height: 20, width: 0),
               _feedbackRow
