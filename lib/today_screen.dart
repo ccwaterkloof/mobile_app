@@ -31,23 +31,32 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
   }
 
   get _body {
-    return ListView(
-      children: <Widget>[
-        Stack(children: [
-          Column(
-            children: <Widget>[
-              AspectRatio(
-                aspectRatio: 1.33,
-                child: (_status == PageStatus.Ready) ? _image : Container(),
-              ),
-              // enough space for two lines of title styled text
-              Container(height: 60.0),
-            ],
-          ),
-          _name,
-        ]),
-        _description,
-      ],
+    return new RefreshIndicator(
+      child: ListView(
+        children: <Widget>[
+          Stack(children: [
+            Column(
+              children: <Widget>[
+                AspectRatio(
+                  aspectRatio: 1.33,
+                  child: (_status == PageStatus.Ready) ? _image : Container(),
+                ),
+                // enough space for two lines of title styled text
+                Container(height: 60.0),
+              ],
+            ),
+            _name,
+          ]),
+          _description,
+        ],
+      ),
+      onRefresh: () async {
+        setState(() {
+          _status = PageStatus.Loading;
+          _nameIsReady = true;
+        });
+        await fetchListAndDisplay();
+      },
     );
   }
 
@@ -117,23 +126,27 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
     });
   }
 
+  Future fetchListAndDisplay() async {
+    try {
+      _list = await cloud.fetchMembers();
+      setMember();
+      setState(() {
+        _status = PageStatus.Ready;
+      });
+    } catch (e) {
+      setState(() {
+        _status = PageStatus.Fail;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     Future.delayed(Duration.zero, () async {
       _screen = MediaQuery.of(context).size;
       await authenticate(context);
-      try {
-        _list = await cloud.fetchMembers();
-        setMember();
-        setState(() {
-          _status = PageStatus.Ready;
-        });
-      } catch (e) {
-        setState(() {
-          _status = PageStatus.Fail;
-        });
-      }
+      await fetchListAndDisplay();
     });
   }
 }
