@@ -5,6 +5,7 @@ import 'package:date_format/date_format.dart';
 import './services/cloud_service.dart';
 import './services/store_service.dart';
 import 'login_screen.dart';
+import 'list_screen.dart';
 import 'models.dart';
 import 'stylesheet.dart';
 
@@ -26,6 +27,14 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
       appBar: AppBar(
         title: Text(_title),
       ),
+      floatingActionButton: FloatingActionButton(
+          child: new Icon(Icons.list),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ListScreen(_list)),
+            );
+          }),
       body: _body,
     );
   }
