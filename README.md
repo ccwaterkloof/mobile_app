@@ -31,7 +31,7 @@ version: 0.2.2+5
 ### Google Play Store
 
 ```
-flutter build appbundle --target-platform android-arm,android-arm64
+flutter build appbundle
 ```
 
 Upload the apk to the new build in Google Play Console.
