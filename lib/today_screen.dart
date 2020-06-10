@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import './services/cloud_service.dart';
 import './services/store_service.dart';
 import 'login_screen.dart';
@@ -43,19 +44,22 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
     return new RefreshIndicator(
       child: ListView(
         children: <Widget>[
-          Stack(children: [
-            Column(
-              children: <Widget>[
-                AspectRatio(
-                  aspectRatio: 1.33,
-                  child: (_status == PageStatus.Ready) ? _image : Container(),
-                ),
-                // enough space for two lines of title styled text
-                Container(height: 60.0),
-              ],
-            ),
-            _name,
-          ]),
+          Stack(
+            children: [
+              Column(
+                children: <Widget>[
+                  AspectRatio(
+                    aspectRatio: 1.33,
+                    // child: (_status == PageStatus.Ready) ? _image : Container(),
+                    child: _image,
+                  ),
+                  // enough space for two lines of title styled text
+                  Container(height: 60.0),
+                ],
+              ),
+              _name,
+            ],
+          ),
           _description,
         ],
       ),
@@ -70,23 +74,28 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
   }
 
   get _image {
-    if (_member.imageUrl == null) return Container();
+    if (_member?.imageUrl == null) return Container();
 
-    return Image.network(
-      _member.imageUrl,
-      frameBuilder: (BuildContext context, Widget child, int frame,
-          bool wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded) {
-          return child;
-        }
-        return AnimatedOpacity(
-          child: child,
-          opacity: frame == null ? 0 : 1,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeOut,
-        );
-      },
+    return CachedNetworkImage(
+      imageUrl: _member.imageUrl,
+      fadeInDuration: const Duration(milliseconds: 1500),
     );
+
+    // return Image.network(
+    //   _member.imageUrl,
+    //   frameBuilder: (BuildContext context, Widget child, int frame,
+    //       bool wasSynchronouslyLoaded) {
+    //     if (wasSynchronouslyLoaded) {
+    //       return child;
+    //     }
+    //     return AnimatedOpacity(
+    //       child: child,
+    //       opacity: frame == null ? 0 : 1,
+    //       duration: const Duration(milliseconds: 500),
+    //       curve: Curves.easeOut,
+    //     );
+    //   },
+    // );
   }
 
   get _name {
@@ -122,7 +131,7 @@ class _TodayScreenState extends State<TodayScreen> with Authentication {
 
   get _title {
     final today = DateTime.now();
-    return formatDate(today, [DD, ',', d, ' ', MM]);
+    return formatDate(today, [DD, ', ', d, ' ', MM]);
   }
 
   setMember() {

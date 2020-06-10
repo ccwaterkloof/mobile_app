@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'stylesheet.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'models.dart';
 
 class MemberScreen extends StatefulWidget {
@@ -15,6 +15,11 @@ class _MemberScreenState extends State<MemberScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final TextStyle heroStyle = Theme.of(context).textTheme.headline6.copyWith(
+          fontSize: 20,
+          fontWeight: FontWeight.w600,
+        );
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.member.name),
@@ -35,7 +40,7 @@ class _MemberScreenState extends State<MemberScreen> {
                   child: Text(
                     "${widget.member.name}",
                     textAlign: TextAlign.left,
-                    style: Style.h2,
+                    style: heroStyle,
                     maxLines: 2,
                   ),
                 ),
@@ -54,21 +59,7 @@ class _MemberScreenState extends State<MemberScreen> {
   get _image {
     if (widget.member.imageUrl == null) return Container();
 
-    return Image.network(
-      widget.member.imageUrl,
-      frameBuilder: (BuildContext context, Widget child, int frame,
-          bool wasSynchronouslyLoaded) {
-        if (wasSynchronouslyLoaded) {
-          return child;
-        }
-        return AnimatedOpacity(
-          child: child,
-          opacity: frame == null ? 0 : 1,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.easeOut,
-        );
-      },
-    );
+    return CachedNetworkImage(imageUrl: widget.member.imageUrl);
   }
 }
 

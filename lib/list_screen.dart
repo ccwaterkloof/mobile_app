@@ -15,6 +15,11 @@ class ListScreen extends StatefulWidget {
 class _ListScreenState extends State<ListScreen> {
   @override
   Widget build(BuildContext context) {
+    final TextStyle heroStyle = Theme.of(context).textTheme.headline6.copyWith(
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+        );
+
     return Scaffold(
       appBar: AppBar(
         title: Text("CCW Family"),
@@ -29,7 +34,7 @@ class _ListScreenState extends State<ListScreen> {
                 child: ListTile(
                   title: Hero(
                     tag: widget.list[index].name,
-                    child: Text(widget.list[index].name),
+                    child: Text(widget.list[index].name, style: heroStyle),
                     // contentPadding: EdgeInsets.only(left: 20.0, right: 50.0),
                   ),
                 ),
