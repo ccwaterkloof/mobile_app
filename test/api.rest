@@ -7,10 +7,29 @@ GET https://api.trello.com/1/members/jannietheunissen/boards?key={{key}}&token={
 Accept: application/json
 
 ###
-GET https://api.trello.com/1/boards/{{board}}/cards?filter=visible&?key={{key}}&token={{token}} HTTP/1.1
+GET https://api.trello.com/1/boards/{{board}}/cards?filter=visible&key={{key}}&token={{token}} HTTP/1.1
 Accept: application/json
 
 ###
+GET https://api.trello.com/1/boards/{{board}}/cards?fields=name,desc,due&attachments=true&attachment_fields=url&filter=visible&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+
+###
+# Production query
 GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc,due&attachments=true&attachment_fields=url&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+# With checklists
+GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc,due&attachments=cover&attachment_fields=url&checklists=all&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+GET https://trello.com/1/checklists/5f9702ad1861218fc57d3d66/checkItems&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+GET https://trello.com/1/members/me/cards?checklists=all&key={{key}}&token={{token}} HTTP/1.1
 Accept: application/json
 
