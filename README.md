@@ -54,3 +54,9 @@ open ios/Runner.xcworkspace
 2. Select the destination from Product > Destination (usually Generic ios Device)
 3. select Product > Archive
 4. After the build succeeds, run Validation on the package
+
+
+## Roadmap
+
+- name search filter
+- birthday highlight (including milestone)

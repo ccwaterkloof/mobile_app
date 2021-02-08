@@ -20,9 +20,12 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.12.0+2
+  provider: ^4.3.3
   date_format: ^1.0.8
   shared_preferences: ^0.5.7+3
   cached_network_image: ^2.2.0+1
+  flutter_inner_drawer: ^0.5.7+2
+  grouped_list: ^3.7.1
 
 dev_dependencies:
   flutter_test:
