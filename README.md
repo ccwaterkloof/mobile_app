@@ -1,4 +1,6 @@
-# Christ Church Waterkloof
+# Christ Church Waterkloof Prayer App
+
+Church prayer app running off a Trello board as the CMS.
 
 ## Setup
 
@@ -58,5 +60,5 @@ open ios/Runner.xcworkspace
 
 ## Roadmap
 
-- name search filter
+- name search improvements
 - birthday highlight (including milestone)
