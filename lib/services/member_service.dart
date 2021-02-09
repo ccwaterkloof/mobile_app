@@ -13,27 +13,24 @@ class MemberService extends ChangeNotifier {
   final _currentColumnId = "5e0dafbf4c13d83b0d74204c";
 
   final SharedPreferences _prefs;
-  Timer _readyTimer;
   String _apiKey;
   String _apiToken;
+  bool _hasFoundDates;
 
   MemberService._(this._prefs) {
     _apiKey = _prefs.getString("key");
     _apiToken = _prefs.getString("token");
+    _hasFoundDates = _prefs.getBool("hasFoundDates");
     nameIsReady = false;
 
     if (!hasKeys) return;
 
     fetchMembers();
 
-    // .then((_) {
-    //   // the delay should be about as long as it takes
-    //   // to download the member image
-    //   _readyTimer = Timer(Duration(seconds: 1), () {
-    //     nameIsReady = true;
-    //     notifyListeners();
-    //   });
-    // });
+    if (_hasFoundDates ?? false) return;
+    Future.delayed(Duration(seconds: 7), () {
+      _feedbackStream.sink.add("tooltip1");
+    });
   }
 
   static Future<MemberService> create() async {
@@ -75,6 +72,12 @@ class MemberService extends ChangeNotifier {
       StreamController<String>.broadcast();
   Stream<String> get feedbackStream => _feedbackStream.stream;
 
+  bool get hasFoundDates => _hasFoundDates ?? false;
+  set hasFoundDates(bool value) {
+    _hasFoundDates = value;
+    _prefs.setBool("hasFoundDates", value);
+  }
+
   // ------------------------------------
   // Trello
   // ------------------------------------
@@ -99,7 +102,17 @@ class MemberService extends ChangeNotifier {
       '/1/lists/$_currentColumnId/cards',
       params,
     );
-    final response = await http.get(uri);
+
+    http.Response response;
+
+    try {
+      response = await http.get(uri);
+    } catch (e) {
+      // give the home screen a chance to hook to the event listener
+      await Future.delayed(Duration(seconds: 2));
+      _feedbackStream.sink.add("No connection to fetch the data.");
+      return;
+    }
 
     if (response.statusCode != 200) {
       _feedbackStream.sink
@@ -194,7 +207,6 @@ class MemberService extends ChangeNotifier {
 
   @override
   void dispose() {
-    _readyTimer?.cancel();
     _feedbackStream.close();
     super.dispose();
   }

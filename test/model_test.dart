@@ -62,10 +62,10 @@ void main() {
       );
 
       expect(card.dates.length, 3);
-      expect(card.dates[0].description, "Jannie's birthday");
-      expect(card.dates[0].day, 25);
-      expect(card.dates[0].month, 6);
-      expect(card.dates[0].year, 1966);
+      expect(card.dates[0].description, "Jannie & Marna's anniversery");
+      expect(card.dates[0].day, 8);
+      expect(card.dates[0].month, 1);
+      expect(card.dates[0].year, 1994);
 
       // no dates
       final noDateCard = members[31];

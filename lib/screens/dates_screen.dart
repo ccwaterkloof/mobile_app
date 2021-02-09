@@ -23,32 +23,41 @@ class DatesScreen extends StatelessWidget {
       body: (service.list?.isEmpty ?? true)
           ? Container()
           : SafeArea(
-              child: GroupedListView<MemberDate, int>(
+              child: Padding(
+                // padding: const EdgeInsets.only(left: 10),
                 padding: const EdgeInsets.all(20),
-                elements: dates,
-                groupBy: (element) => element.month,
-                groupSeparatorBuilder: _groupHeader,
-                useStickyGroupSeparators: true, // optional
-                stickyHeaderBackgroundColor: Style.colorBackground,
-                // floatingHeader: false,
-                itemBuilder: (context, item) => InkWell(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: 25,
-                        width: 65,
-                        child: Text(
-                          item.date,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w600,
+                child: GroupedListView<MemberDate, int>(
+                  elements: dates,
+                  groupBy: (element) => element.month,
+                  groupSeparatorBuilder: _groupHeader,
+                  useStickyGroupSeparators: true, // optional
+                  stickyHeaderBackgroundColor: Style.colorBackground,
+                  // floatingHeader: false,
+                  itemBuilder: (context, item) => InkWell(
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: 65,
+                            child: Text(
+                              item.date,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
-                        ),
+                          Expanded(
+                            child: Text(
+                              item.description,
+                            ),
+                          ),
+                        ],
                       ),
-                      Text(item.description),
-                    ],
+                    ),
+                    onTap: () => notifyTap(item, service),
                   ),
-                  onTap: () => notifyTap(item, service),
                 ),
               ),
             ),

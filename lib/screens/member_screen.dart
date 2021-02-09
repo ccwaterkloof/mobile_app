@@ -2,6 +2,7 @@ import 'package:provider/provider.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+
 import '../models.dart';
 import '../services/member_service.dart';
 import '../stylesheet.dart';

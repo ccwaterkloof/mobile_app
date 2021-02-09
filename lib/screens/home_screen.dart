@@ -4,18 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
-import '../models.dart';
-import '../services/member_service.dart';
-import '../stylesheet.dart';
 import './dates_screen.dart';
 import './index_screen.dart';
 import './member_screen.dart';
+import '../components/tooltips.dart';
+import '../models.dart';
+import '../services/member_service.dart';
+import '../stylesheet.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
+// ignore: prefer_mixin
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   WidgetsBinding binding = WidgetsBinding.instance;
   final _innerDrawerKey = GlobalKey<InnerDrawerState>();
@@ -54,6 +56,17 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           innerDrawerCallback: _drawerToggled,
           leftChild: IndexScreen(onTap: _selectMember),
           rightChild: DatesScreen(onTap: _selectMember),
+          onDragUpdate: (distance, direction) {
+            // print("distance: $distance,  direction $direction");
+            // InnerDrawerDirection.start - index pane
+            // InnerDrawerDirection.end - dates pane
+
+            if (distance < 0.1 || _service.hasFoundDates) return;
+
+            if (direction == InnerDrawerDirection.end) {
+              _service.hasFoundDates = true;
+            }
+          },
           scaffold: MemberScreen(
             _member(_service),
             isTodayMember: _showTodayMember,
@@ -98,11 +111,28 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     setState(() {
       _memberListIsOpen = wasOpened;
     });
-    // if (wasOpened) return;
   }
 
   void onFeedback(String message) {
-    _scaffoldKey.currentState.showSnackBar(SnackBar(content: Text(message)));
+    if (message == "tooltip1") {
+      final overlay = Overlay.of(context);
+      final tooltipOne = OverlayEntry(
+        builder: (context) {
+          return ToolTipDates();
+        },
+      );
+      overlay.insert(tooltipOne);
+      Future.delayed(Duration(seconds: 5), () {
+        tooltipOne.remove();
+      });
+      return;
+    }
+    _scaffoldKey.currentState.showSnackBar(SnackBar(
+      content: Text(
+        message,
+        style: TextStyle(fontSize: 18),
+      ),
+    ));
   }
 
   @override
