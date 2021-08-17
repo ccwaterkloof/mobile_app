@@ -1,4 +1,4 @@
-# Christ Church Waterkloof Prayer App
+# Christ Church Waterkloof Prayer App [![Test](https://github.com/ccwaterkloof/mobile_app/actions/workflows/test.yml/badge.svg)](https://github.com/ccwaterkloof/mobile_app/actions/workflows/test.yml)
 
 Church prayer app running off a Trello board as the CMS.
 
@@ -56,7 +56,6 @@ open ios/Runner.xcworkspace
 2. Select the destination from Product > Destination (usually Generic ios Device)
 3. select Product > Archive
 4. After the build succeeds, run Validation on the package
-
 
 ## Roadmap
 
