@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
-import './dates_screen.dart';
-import './index_screen.dart';
-import './member_screen.dart';
 import '../components/tooltips.dart';
 import '../models.dart';
 import '../services/member_service.dart';
 import '../stylesheet.dart';
+import './dates_screen.dart';
+import './index_screen.dart';
+import './member_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -19,12 +19,12 @@ class HomeScreen extends StatefulWidget {
 
 // ignore: prefer_mixin
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
-  WidgetsBinding binding = WidgetsBinding.instance;
+  WidgetsBinding? binding = WidgetsBinding.instance;
   final _innerDrawerKey = GlobalKey<InnerDrawerState>();
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Member _selectedMember;
+  Member? _selectedMember;
   bool _memberListIsOpen = false;
-  StreamSubscription<String> _feedbackSubscription;
+  StreamSubscription<String>? _feedbackSubscription;
 
   @override
   Widget build(BuildContext context) {
@@ -83,27 +83,27 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   void _selectMember(member) {
     setState(() {
       _selectedMember = member;
-      _innerDrawerKey?.currentState?.toggle();
+      _innerDrawerKey.currentState?.toggle();
     });
   }
 
-  Widget _thatButton(MemberService service) {
+  Widget? _thatButton(MemberService service) {
     if (_memberListIsOpen) return null;
 
-    if (!(service?.nameIsReady ?? false)) return null;
+    if (!(service.nameIsReady)) return null;
 
     return FloatingActionButton(
         child: new Icon(Icons.list),
         onPressed: () {
-          _innerDrawerKey?.currentState?.toggle();
+          _innerDrawerKey.currentState?.toggle();
         });
   }
 
   bool get _showTodayMember => _selectedMember == null;
 
-  Member _member(MemberService service) {
+  Member? _member(MemberService service) {
     if (!_showTodayMember) return _selectedMember;
-    final member = Member.forToday(service?.list ?? []);
+    final member = Member.forToday(service.list);
     return member;
   }
 
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void onFeedback(String message) {
     if (message == "tooltip1") {
-      final overlay = Overlay.of(context);
+      final overlay = Overlay.of(context)!;
       final tooltipOne = OverlayEntry(
         builder: (context) {
           return ToolTipDates();
@@ -127,12 +127,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       });
       return;
     }
-    _scaffoldKey.currentState.showSnackBar(SnackBar(
+    final snackBar = SnackBar(
       content: Text(
         message,
         style: TextStyle(fontSize: 18),
       ),
-    ));
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    // _scaffoldKey.currentState!.showSnackBar();
   }
 
   @override
@@ -147,7 +149,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    binding.addObserver(this);
+    binding!.addObserver(this);
     Future.delayed(Duration.zero, () async {
       final service = context.read<MemberService>();
       _feedbackSubscription = service.feedbackStream.listen(onFeedback);
@@ -156,7 +158,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    binding.removeObserver(this);
+    binding!.removeObserver(this);
     _feedbackSubscription?.cancel();
     super.dispose();
   }

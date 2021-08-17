@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _password = TextEditingController();
-  MemberService _service;
+  late MemberService _service;
   LoginStatus _status = LoginStatus.ready;
 
   @override
@@ -38,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 autocorrect: false,
               ),
               const SizedBox(height: 20),
-              RaisedButton(
+              ElevatedButton(
                 onPressed: (_status == LoginStatus.checking) ? null : _tryLogin,
                 child: const Text('Unlock'),
               ),

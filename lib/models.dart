@@ -1,11 +1,11 @@
 class Member {
-  String id;
-  String name;
-  String index;
-  String subIndex;
-  String imageUrl;
-  String description;
-  List<MemberDate> dates;
+  String? id;
+  late String name;
+  String? index;
+  String? subIndex;
+  String? imageUrl;
+  String? description;
+  List<MemberDate>? dates;
 
   Member(this.name) {
     parseName();
@@ -25,9 +25,9 @@ class Member {
     // parse any dates
     dates = [];
     final lists =
-        json["checklists"]?.map((list) => list["checkItems"])?.toList();
-    if (lists?.isEmpty ?? true) return;
-    if (lists[0]?.isEmpty ?? true) return;
+        json["checklists"]?.map((list) => list["checkItems"])?.toList() ?? [];
+    if (lists.isEmpty) return;
+    if (lists[0].isEmpty) return;
     dates = lists[0]
         .map((row) {
           final item = MemberDate.fromListEntry(row["name"]);
@@ -36,11 +36,11 @@ class Member {
         .cast<MemberDate>()
         .where((date) => date?.day != null)
         .toList();
-    dates.sort();
+    dates!.sort();
   }
 
   void parseName() {
-    if (name?.isEmpty ?? true) return;
+    if (name.isEmpty) return;
     final parts = name.split(" with ");
     index = parts[0].trim();
     if (parts.length > 1) {
@@ -48,13 +48,13 @@ class Member {
     }
   }
 
-  String get title {
+  String? get title {
     if (subIndex?.isNotEmpty ?? false) return index;
     return name;
   }
 
   List<String> get capitals {
-    if (name == null) return [];
+    if (name.isEmpty) return [];
 
     final start = 'A'.codeUnitAt(0);
     final alphabet =
@@ -71,8 +71,8 @@ class Member {
   static List<Member> formList(List<dynamic> json) =>
       json.map((item) => Member.fromJson(item)).toList();
 
-  static Member forToday(List<Member> members) {
-    if (members?.isEmpty ?? true) return null;
+  static Member? forToday(List<Member> members) {
+    if (members.isEmpty) return null;
     final theDay = new DateTime.utc(1994, DateTime.january, 8);
     final counter = theDay.difference(DateTime.now()).inDays;
     final index = counter % members.length;
@@ -81,10 +81,10 @@ class Member {
 }
 
 class MemberDate implements Comparable<MemberDate> {
-  int year;
-  int month;
-  int day;
-  String description;
+  int? year;
+  int? month;
+  int? day;
+  String? description;
 
   MemberDate.fromListEntry(String entry) {
     final parts = entry.split(":");

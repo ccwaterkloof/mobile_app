@@ -13,9 +13,9 @@ class MemberService extends ChangeNotifier {
   final _currentColumnId = "5e0dafbf4c13d83b0d74204c";
 
   final SharedPreferences _prefs;
-  String _apiKey;
-  String _apiToken;
-  /*late*/ bool _hasFoundDates;
+  String? _apiKey;
+  String? _apiToken;
+  late bool _hasFoundDates;
 
   MemberService._(this._prefs) {
     _apiKey = _prefs.getString("key");
@@ -42,7 +42,7 @@ class MemberService extends ChangeNotifier {
   // Searching
   // ------------------------------------
 
-  Map<String, List<String>> _searchIndex;
+  late Map<String, List<String?>> _searchIndex;
   List<String> get searchKeys {
     final keys = _searchIndex.keys.toList();
     keys.add("");
@@ -58,10 +58,10 @@ class MemberService extends ChangeNotifier {
   }
 
   List<Member> get _filteredList {
-    if (_searchFilter?.isEmpty ?? true) return _list;
+    if (_searchFilter.isEmpty) return _list;
 
     final shortList = _searchIndex[_searchFilter];
-    return _list.where((member) => shortList.contains(member.id)).toList();
+    return _list.where((member) => shortList!.contains(member.id)).toList();
   }
 
   // ------------------------------------
@@ -72,7 +72,7 @@ class MemberService extends ChangeNotifier {
       StreamController<String>.broadcast();
   Stream<String> get feedbackStream => _feedbackStream.stream;
 
-  bool get hasFoundDates => _hasFoundDates ?? false;
+  bool get hasFoundDates => _hasFoundDates;
   set hasFoundDates(bool value) {
     _hasFoundDates = value;
     _prefs.setBool("hasFoundDates", value);
@@ -152,15 +152,15 @@ class MemberService extends ChangeNotifier {
   // ------------------------------------
 
   Future logout() async {
-    await _prefs?.remove("token");
+    await _prefs.remove("token");
     _apiToken = null;
-    await _prefs?.remove("key");
+    await _prefs.remove("key");
     _apiKey = null;
     notifyListeners();
   }
 
   bool get hasKeys {
-    return _prefs.containsKey("token") ?? false;
+    return _prefs.containsKey("token");
   }
 
   Future<void> login(String password) async {
@@ -196,18 +196,18 @@ class MemberService extends ChangeNotifier {
     fetchMembers();
   }
 
-  Map<String, String> get _credentials {
+  Map<String, String?> get _credentials {
     return {"key": _apiKey, "token": _apiToken};
   }
 
   Future<void> _setApiKey(String value) async {
     _apiKey = value;
-    _prefs.setString("key", _apiKey);
+    _prefs.setString("key", _apiKey!);
   }
 
   Future<void> _setToken(String value) async {
     _apiToken = value;
-    _prefs.setString("token", _apiToken);
+    _prefs.setString("token", _apiToken!);
   }
 
   @override

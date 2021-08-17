@@ -170,9 +170,11 @@ packages:
   flutter_inner_drawer:
     dependency: "direct main"
     description:
-      name: flutter_inner_drawer
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "kenjishiromajp-update-for-2.12-null-safety-casting"
+      resolved-ref: "63f36418b058dc5a175887bf3fb9ec0fd950693b"
+      url: "git://github.com/kenjishiromajp/flutter_inner_drawer.git"
+    source: git
     version: "1.0.0+1"
   flutter_launcher_icons:
     dependency: "direct dev"

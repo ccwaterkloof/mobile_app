@@ -6,13 +6,13 @@ import '../stylesheet.dart';
 class IndexScreen extends StatelessWidget {
   final Function onTap;
 
-  const IndexScreen({@required this.onTap, Key key}) : super(key: key);
+  const IndexScreen({required this.onTap, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
 
-    final heroStyle = Theme.of(context).textTheme.headline6.copyWith(
+    final heroStyle = Theme.of(context).textTheme.headline6!.copyWith(
           fontSize: 16,
           fontWeight: FontWeight.w500,
         );
@@ -21,7 +21,7 @@ class IndexScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Style.colorBackground,
-      body: (service.list?.isEmpty ?? true)
+      body: (service.list.isEmpty)
           ? Container()
           : SafeArea(
               child: Column(
@@ -44,11 +44,11 @@ class IndexScreen extends StatelessWidget {
                             ),
                             child: ListTile(
                               title: Text(
-                                member.index,
+                                member.index!,
                                 style: heroStyle,
                               ),
                               subtitle: (member.subIndex != null)
-                                  ? Text(member.subIndex)
+                                  ? Text(member.subIndex!)
                                   : null,
                             ),
                             margin: EdgeInsets.only(bottom: 15),
@@ -74,11 +74,11 @@ class NameFilter extends StatefulWidget {
 }
 
 class _NameFilterState extends State<NameFilter> {
-  int _filter;
+  int? _filter;
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
-    if (service.searchFilter?.isNotEmpty ?? false) return _notice(service);
+    if (service.searchFilter.isNotEmpty) return _notice(service);
 
     return _slider(service);
   }
@@ -145,9 +145,9 @@ class _NameFilterState extends State<NameFilter> {
 
   String label(MemberService service) {
     if (_filter == null ||
-        _filter < 0 ||
-        _filter > service.searchKeys.length - 1) return "";
+        _filter! < 0 ||
+        _filter! > service.searchKeys.length - 1) return "";
 
-    return service.searchKeys[_filter];
+    return service.searchKeys[_filter!];
   }
 }
