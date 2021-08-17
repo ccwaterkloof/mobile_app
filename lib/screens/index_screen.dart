@@ -91,9 +91,7 @@ class _NameFilterState extends State<NameFilter> {
             Expanded(
               child: Text(
                 'All names with "${service.searchFilter}"',
-                style: TextStyle(
-                  fontSize: 20,
-                ),
+                style: TextStyle(fontSize: 20),
               ),
             ),
             IconButton(
