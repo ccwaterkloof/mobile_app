@@ -102,7 +102,7 @@ class _NameFilterState extends State<NameFilter> {
                 setState(() {
                   _filter = 0;
                 });
-                service.searchFilter = null;
+                service.searchFilter = "";
               },
             ),
           ],

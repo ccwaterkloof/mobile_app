@@ -12,15 +12,15 @@ class Member {
   }
 
   Member.fromJson(Map<String, dynamic> json) {
-    id = json["id"];
-    name = json["name"];
+    id = json["id"] ?? "";
+    name = json["name"] ?? "";
     parseName();
-    description = json["desc"];
+    description = json["desc"] ?? "";
     final attachments = json["attachments"]
             ?.map((entry) => entry["url"].toString())
             ?.toList() ??
         [];
-    imageUrl = attachments.isEmpty ? null : attachments[0];
+    imageUrl = attachments.isEmpty ? "" : attachments[0];
 
     // parse any dates
     dates = [];

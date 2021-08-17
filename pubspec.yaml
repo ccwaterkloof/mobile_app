@@ -19,19 +19,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.12.0+2
-  provider: ^4.3.3
-  date_format: ^1.0.8
-  shared_preferences: ^0.5.7+3
-  cached_network_image: ^2.2.0+1
-  flutter_inner_drawer: ^0.5.7+2
-  grouped_list: ^3.7.1
+  http: ^0.13.3
+  provider: ^5.0.0
+  date_format: ^2.0.4
+  shared_preferences: ^2.0.6
+  cached_network_image: ^3.1.0
+  flutter_inner_drawer: ^1.0.0+1
+  grouped_list: ^4.1.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  test: ^1.9.4
-  flutter_launcher_icons: ^0.8.1
+  test: ^1.16.8
+  flutter_launcher_icons: ^0.9.1
 
 # If you change the launcher icon you can build it with the following:
 # flutter pub run flutter_launcher_icons:main

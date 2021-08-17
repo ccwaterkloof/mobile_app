@@ -15,19 +15,19 @@ class MemberService extends ChangeNotifier {
   final SharedPreferences _prefs;
   String _apiKey;
   String _apiToken;
-  bool _hasFoundDates;
+  /*late*/ bool _hasFoundDates;
 
   MemberService._(this._prefs) {
     _apiKey = _prefs.getString("key");
     _apiToken = _prefs.getString("token");
-    _hasFoundDates = _prefs.getBool("hasFoundDates");
+    _hasFoundDates = _prefs.getBool("hasFoundDates") ?? false;
     nameIsReady = false;
 
     if (!hasKeys) return;
 
     fetchMembers();
 
-    if (_hasFoundDates ?? false) return;
+    if (_hasFoundDates) return;
     Future.delayed(Duration(seconds: 7), () {
       _feedbackStream.sink.add("tooltip1");
     });
@@ -50,7 +50,7 @@ class MemberService extends ChangeNotifier {
     return keys;
   }
 
-  String _searchFilter;
+  String _searchFilter = "";
   String get searchFilter => _searchFilter;
   set searchFilter(String value) {
     _searchFilter = value;
@@ -82,10 +82,10 @@ class MemberService extends ChangeNotifier {
   // Trello
   // ------------------------------------
 
-  List<Member> _list;
+  List<Member> _list = [];
   List<Member> get list => _filteredList;
 
-  bool nameIsReady;
+  bool nameIsReady = false;
 
   Future<void> fetchMembers({bool isInitial = true}) async {
     final params = {
@@ -160,7 +160,7 @@ class MemberService extends ChangeNotifier {
   }
 
   bool get hasKeys {
-    return _prefs.containsKey("token");
+    return _prefs.containsKey("token") ?? false;
   }
 
   Future<void> login(String password) async {
@@ -184,8 +184,13 @@ class MemberService extends ChangeNotifier {
     }
 
     final raw = json.decode(response.body);
-    await _setApiKey(raw['key']);
-    await _setToken(raw['token']);
+    final token = raw["token"] ?? "";
+    final key = raw["key"] ?? "";
+    if (token.isEmpty || key.isEmpty) {
+      throw "Authentication service error.";
+    }
+    await _setApiKey(key);
+    await _setToken(token);
     notifyListeners();
 
     fetchMembers();
