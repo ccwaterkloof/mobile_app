@@ -34,3 +34,8 @@ Accept: application/json
 GET https://trello.com/1/members/me/cards?checklists=all&key={{key}}&token={{token}} HTTP/1.1
 Accept: application/json
 
+###
+GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+

@@ -51,7 +51,7 @@ void main() {
       expect(card.name, "Jannie & Marna Theunissen");
 
       expect(
-        card.description
+        card.description!
             .startsWith("I urge you to live a life worthy of the calling"),
         true,
       );
@@ -61,15 +61,15 @@ void main() {
         "https://trello-attachments.s3.amazonaws.com/5e0daf8369a1586343589db1/5e175f1d8c64ad663502c9ad/05e2e5adcfc7463bc53c48286ad10926/theunissens.jpg",
       );
 
-      expect(card.dates.length, 3);
-      expect(card.dates[0].description, "Jannie & Marna's anniversery");
-      expect(card.dates[0].day, 8);
-      expect(card.dates[0].month, 1);
-      expect(card.dates[0].year, 1994);
+      expect(card.dates!.length, 3);
+      expect(card.dates![0].description, "Jannie & Marna's anniversery");
+      expect(card.dates![0].day, 8);
+      expect(card.dates![0].month, 1);
+      expect(card.dates![0].year, 1994);
 
       // no dates
       final noDateCard = members[31];
-      expect(noDateCard.dates.length, 0);
+      expect(noDateCard.dates!.length, 0);
     });
   });
 }

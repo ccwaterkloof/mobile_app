@@ -9,24 +9,23 @@ import '../stylesheet.dart';
 class DatesScreen extends StatelessWidget {
   final Function onTap;
 
-  const DatesScreen({@required this.onTap, Key key}) : super(key: key);
+  const DatesScreen({required this.onTap, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
-    final dates = service.list?.fold<List<MemberDate>>(<MemberDate>[],
-            (collected, item) => [...collected, ...item.dates]) ??
-        <MemberDate>[];
+    final dates = service.list.fold<List<MemberDate>>(
+        <MemberDate>[], (collected, item) => [...collected, ...item.dates!]);
 
     return Scaffold(
       backgroundColor: Style.colorBackground,
-      body: (service.list?.isEmpty ?? true)
+      body: (service.list.isEmpty)
           ? Container()
           : SafeArea(
               child: Padding(
                 // padding: const EdgeInsets.only(left: 10),
                 padding: const EdgeInsets.all(20),
-                child: GroupedListView<MemberDate, int>(
+                child: GroupedListView<MemberDate, int?>(
                   elements: dates,
                   groupBy: (element) => element.month,
                   groupSeparatorBuilder: _groupHeader,
@@ -49,9 +48,7 @@ class DatesScreen extends StatelessWidget {
                             ),
                           ),
                           Expanded(
-                            child: Text(
-                              item.description,
-                            ),
+                            child: Text(item.description!),
                           ),
                         ],
                       ),
@@ -67,7 +64,7 @@ class DatesScreen extends StatelessWidget {
   void notifyTap(MemberDate item, MemberService service) {
     // find the member
     for (final member in service.list) {
-      for (final loopItem in member.dates) {
+      for (final loopItem in member.dates!) {
         if (loopItem.isSameAs(item)) {
           onTap(member);
           return;
@@ -76,7 +73,7 @@ class DatesScreen extends StatelessWidget {
     }
   }
 
-  Widget _groupHeader(int month) {
+  Widget _groupHeader(int? month) {
     final months = [
       'January',
       'February',
@@ -94,7 +91,7 @@ class DatesScreen extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 10),
-      child: Text("${months[month - 1]}", style: Style.h2),
+      child: Text("${months[month! - 1]}", style: Style.h2),
     );
   }
 }

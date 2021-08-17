@@ -8,10 +8,10 @@ import '../services/member_service.dart';
 import '../stylesheet.dart';
 
 class MemberScreen extends StatelessWidget {
-  final Member member;
+  final Member? member;
   final bool isTodayMember;
 
-  const MemberScreen(this.member, {@required this.isTodayMember});
+  const MemberScreen(this.member, {required this.isTodayMember});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class MemberScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title),
+        title: Text(_title!),
       ),
       body: ListView(
         children: [
@@ -67,19 +67,19 @@ class MemberScreen extends StatelessWidget {
     );
   }
 
-  String get _title {
+  String? get _title {
     if (member == null) return "";
 
     final today = DateTime.now();
     if (isTodayMember) return formatDate(today, [DD, ', ', d, ' ', MM]);
-    return member.title;
+    return member!.title;
   }
 
   Widget get _image {
     if (member?.imageUrl == null) return Container();
 
     return CachedNetworkImage(
-      imageUrl: member.imageUrl,
+      imageUrl: member!.imageUrl!,
       fadeInDuration: const Duration(milliseconds: 1500),
     );
   }
@@ -105,12 +105,12 @@ class MemberScreen extends StatelessWidget {
         children: [
           const Text("Dates", style: Style.h2),
           const SizedBox(height: 10),
-          ...member.dates.map((item) {
+          ...member!.dates!.map((item) {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(height: 25, width: 65, child: Text(item.date)),
-                Text(item?.description ?? ''),
+                Text(item.description ?? ''),
               ],
             );
           })
