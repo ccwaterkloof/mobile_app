@@ -44,7 +44,7 @@ class IndexScreen extends StatelessWidget {
                             ),
                             child: ListTile(
                               title: Text(
-                                member.index!,
+                                member.index,
                                 style: heroStyle,
                               ),
                               subtitle: (member.subIndex != null)

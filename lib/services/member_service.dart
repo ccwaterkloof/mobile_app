@@ -64,6 +64,10 @@ class MemberService extends ChangeNotifier {
     return _list.where((member) => shortList!.contains(member.id)).toList();
   }
 
+  List<Member> get reportList {
+    return _list.where((member) => member.isBroken).toList();
+  }
+
   // ------------------------------------
   // Events bus
   // ------------------------------------
@@ -90,8 +94,6 @@ class MemberService extends ChangeNotifier {
   Future<void> fetchMembers({bool isInitial = true}) async {
     final params = {
       "fields": "name,desc",
-      "attachments": "cover",
-      "attachment_fields": "url",
       "checklists": "all",
       "checklist_fields": "name,checkItems",
       ..._credentials

@@ -5,12 +5,18 @@ import 'package:provider/provider.dart';
 import '../models.dart';
 import '../services/member_service.dart';
 import '../stylesheet.dart';
+import './report_screen.dart';
 
-class DatesScreen extends StatelessWidget {
+class DatesScreen extends StatefulWidget {
   final Function onTap;
 
   const DatesScreen({required this.onTap, Key? key}) : super(key: key);
 
+  @override
+  _DatesScreenState createState() => _DatesScreenState();
+}
+
+class _DatesScreenState extends State<DatesScreen> with TestHelper {
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
@@ -28,7 +34,8 @@ class DatesScreen extends StatelessWidget {
                 child: GroupedListView<MemberDate, int?>(
                   elements: dates,
                   groupBy: (element) => element.month,
-                  groupSeparatorBuilder: _groupHeader,
+                  groupSeparatorBuilder: (month) =>
+                      _groupHeader(context, month),
                   useStickyGroupSeparators: true, // optional
                   stickyHeaderBackgroundColor: Style.colorBackground,
                   // floatingHeader: false,
@@ -66,14 +73,14 @@ class DatesScreen extends StatelessWidget {
     for (final member in service.list) {
       for (final loopItem in member.dates!) {
         if (loopItem.isSameAs(item)) {
-          onTap(member);
+          widget.onTap(member);
           return;
         }
       }
     }
   }
 
-  Widget _groupHeader(int? month) {
+  Widget _groupHeader(BuildContext context, int? month) {
     final months = [
       'January',
       'February',
@@ -91,7 +98,10 @@ class DatesScreen extends StatelessWidget {
 
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 10),
-      child: Text("${months[month! - 1]}", style: Style.h2),
+      child: GestureDetector(
+        onTap: () => detectSecretGesture(context),
+        child: Text("${months[month! - 1]}", style: Style.h2),
+      ),
     );
   }
 }

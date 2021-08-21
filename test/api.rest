@@ -21,8 +21,13 @@ GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc,due&attachment
 Accept: application/json
 
 ###
-# Production query
+# Production query v2
 GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc&attachments=cover&attachment_fields=url&checklists=all&checklist_fields=name,checkItems&key={{key}}&token={{token}} HTTP/1.1
+Accept: application/json
+
+###
+# Production query
+GET https://trello.com/1/lists/{{current}}/cards?fields=name,desc&checklists=all&checklist_fields=name,checkItems&key={{key}}&token={{token}} HTTP/1.1
 Accept: application/json
 
 

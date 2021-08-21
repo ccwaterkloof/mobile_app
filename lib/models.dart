@@ -1,7 +1,7 @@
 class Member {
   String? id;
   late String name;
-  String? index;
+  late String index;
   String? subIndex;
   String? imageUrl;
   String? description;
@@ -16,28 +16,42 @@ class Member {
     name = json["name"] ?? "";
     parseName();
     description = json["desc"] ?? "";
-    final attachments = json["attachments"]
-            ?.map((entry) => entry["url"].toString())
-            ?.toList() ??
-        [];
-    imageUrl = attachments.isEmpty ? "" : attachments[0];
 
-    // parse any dates
+    // parse any images
+    final images = Member.parseList(json, "Images");
+    imageUrl = (images.isNotEmpty) ? images[0] : "";
+
     dates = [];
-    final lists =
-        json["checklists"]?.map((list) => list["checkItems"])?.toList() ?? [];
-    if (lists.isEmpty) return;
-    if (lists[0].isEmpty) return;
-    dates = lists[0]
+    final dateList = Member.parseList(json, "Dates");
+    if (dateList.isEmpty) return;
+    dates = dateList
         .map((row) {
-          final item = MemberDate.fromListEntry(row["name"]);
+          final item = MemberDate.fromListEntry(row);
           return item;
         })
         .cast<MemberDate>()
-        .where((date) => date?.day != null)
+        .where((date) => date.day != null)
         .toList();
     dates!.sort();
   }
+
+  static List<String> parseList(Map<String, dynamic> json, String name) {
+    final lists = json["checklists"]
+            ?.where((list) => list["name"] == name)
+            ?.map((list) => list['checkItems']
+                .map((item) => item["name"])
+                .cast<String>()
+                .toList())
+            ?.toList() ??
+        [];
+    if (lists.isEmpty) return [];
+
+    return lists[0];
+  }
+
+  get isBroken =>
+      (imageUrl?.isEmpty ?? true) ||
+      (imageUrl!.startsWith('https://trello.com'));
 
   void parseName() {
     if (name.isEmpty) return;
@@ -48,7 +62,7 @@ class Member {
     }
   }
 
-  String? get title {
+  String get title {
     if (subIndex?.isNotEmpty ?? false) return index;
     return name;
   }
