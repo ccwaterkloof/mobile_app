@@ -49,7 +49,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
@@ -126,7 +126,7 @@ packages:
       name: date_format
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.6"
   fake_async:
     dependency: transitive
     description:
@@ -166,14 +166,14 @@ packages:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.2"
+    version: "3.3.0"
   flutter_inner_drawer:
     dependency: "direct main"
     description:
       path: "."
       ref: "kenjishiromajp-update-for-2.12-null-safety-casting"
       resolved-ref: "63f36418b058dc5a175887bf3fb9ec0fd950693b"
-      url: "git://github.com/kenjishiromajp/flutter_inner_drawer.git"
+      url: "https://github.com/kenjishiromajp/flutter_inner_drawer.git"
     source: git
     version: "1.0.0+1"
   flutter_launcher_icons:
@@ -220,14 +220,14 @@ packages:
       name: grouped_list
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.2.0"
   http:
     dependency: "direct main"
     description:
       name: http
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.3"
+    version: "0.13.4"
   http_multi_server:
     dependency: transitive
     description:
@@ -390,12 +390,12 @@ packages:
     source: hosted
     version: "4.1.0"
   platform:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: platform
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -423,7 +423,7 @@ packages:
       name: provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.0"
+    version: "6.0.2"
   pub_semver:
     dependency: transitive
     description:
@@ -444,7 +444,21 @@ packages:
       name: shared_preferences
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.6"
+    version: "2.0.13"
+  shared_preferences_android:
+    dependency: transitive
+    description:
+      name: shared_preferences_android
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.11"
+  shared_preferences_ios:
+    dependency: transitive
+    description:
+      name: shared_preferences_ios
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -683,4 +697,4 @@ packages:
     version: "3.1.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.0.0"
+  flutter: ">=2.8.0"

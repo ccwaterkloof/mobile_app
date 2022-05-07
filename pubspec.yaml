@@ -20,16 +20,19 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  http: ^0.13.3
-  provider: ^5.0.0
-  date_format: ^2.0.4
-  shared_preferences: ^2.0.6
-  cached_network_image: ^3.1.0
+  http: ^0.13.4
+  provider: ^6.0.2
+  date_format: ^2.0.6
+  shared_preferences: ^2.0.13
+  cached_network_image: ^3.2.0
   flutter_inner_drawer:
     git:
-      url: git://github.com/kenjishiromajp/flutter_inner_drawer.git
+      url: https://github.com/kenjishiromajp/flutter_inner_drawer.git
       ref: kenjishiromajp-update-for-2.12-null-safety-casting
-  grouped_list: ^4.1.0
+  grouped_list: ^4.2.0
+
+dependency_overrides:
+  platform: ^3.1.0
 
 dev_dependencies:
   flutter_test:
