@@ -91,7 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
-    print("login.init");
     Future.delayed(Duration.zero, () {
       _service = context.read<MemberService>();
     });

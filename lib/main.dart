@@ -7,10 +7,8 @@ import './services/member_service.dart';
 import 'stylesheet.dart';
 
 Future<void> main() async {
-  print("one");
   WidgetsFlutterBinding.ensureInitialized();
   final service = await MemberService.create();
-  print("four");
   runApp(
     ChangeNotifierProvider<MemberService>(
       create: (_) => service,

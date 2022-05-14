@@ -34,10 +34,7 @@ class MemberService extends ChangeNotifier {
   }
 
   static Future<MemberService> create() async {
-    print("two");
-
     final prefs = await SharedPreferences.getInstance();
-    print("three");
     return MemberService._(prefs);
   }
 
