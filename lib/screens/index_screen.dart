@@ -29,19 +29,20 @@ class IndexScreen extends StatelessWidget {
                   Expanded(
                     child: ListView.builder(
                       // physics: const ClampingScrollPhysics(),
-                      padding: EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       itemCount: service.list.length,
                       itemBuilder: (context, index) {
                         final member = service.list[index];
                         return InkWell(
                           child: Container(
-                            decoration: BoxDecoration(
+                            decoration: const BoxDecoration(
                               color: Colors.white,
                               border: Border(
                                 top: border,
                                 bottom: border,
                               ),
                             ),
+                            margin: const EdgeInsets.only(bottom: 15),
                             child: ListTile(
                               title: Text(
                                 member.index,
@@ -51,7 +52,6 @@ class IndexScreen extends StatelessWidget {
                                   ? Text(member.subIndex!)
                                   : null,
                             ),
-                            margin: EdgeInsets.only(bottom: 15),
                           ),
                           onTap: () {
                             onTap(member);
@@ -60,7 +60,7 @@ class IndexScreen extends StatelessWidget {
                       },
                     ),
                   ),
-                  NameFilter()
+                  const NameFilter()
                 ],
               ),
             ),
@@ -69,8 +69,10 @@ class IndexScreen extends StatelessWidget {
 }
 
 class NameFilter extends StatefulWidget {
+  const NameFilter({Key? key}) : super(key: key);
+
   @override
-  _NameFilterState createState() => _NameFilterState();
+  State<NameFilter> createState() => _NameFilterState();
 }
 
 class _NameFilterState extends State<NameFilter> {
@@ -84,18 +86,18 @@ class _NameFilterState extends State<NameFilter> {
   }
 
   Widget _notice(MemberService service) => Container(
-        padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
         color: Style.colorBrand,
         child: Row(
           children: [
             Expanded(
               child: Text(
                 'All names with "${service.searchFilter}"',
-                style: TextStyle(fontSize: 20),
+                style: const TextStyle(fontSize: 20),
               ),
             ),
             IconButton(
-              icon: Icon(Icons.close),
+              icon: const Icon(Icons.close),
               onPressed: () {
                 setState(() {
                   _filter = 0;
@@ -114,7 +116,7 @@ class _NameFilterState extends State<NameFilter> {
       children: [
         Expanded(
           child: SliderTheme(
-            data: SliderThemeData(
+            data: const SliderThemeData(
               // valueIndicatorColor: Colors.white,
               valueIndicatorTextStyle: TextStyle(
                 color: Colors.white,

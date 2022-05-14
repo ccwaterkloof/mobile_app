@@ -7,18 +7,22 @@ import './services/member_service.dart';
 import 'stylesheet.dart';
 
 Future<void> main() async {
+  print("one");
   WidgetsFlutterBinding.ensureInitialized();
   final service = await MemberService.create();
+  print("four");
   runApp(
     ChangeNotifierProvider<MemberService>(
       create: (_) => service,
       lazy: false,
-      child: CCW(),
+      child: const CCW(),
     ),
   );
 }
 
 class CCW extends StatelessWidget {
+  const CCW({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
@@ -27,13 +31,13 @@ class CCW extends StatelessWidget {
       theme: Style.theme,
       home: Navigator(
         pages: [
-          MaterialPage(
-            key: const ValueKey('HomePage'),
+          const MaterialPage(
+            key: ValueKey('HomePage'),
             child: HomeScreen(),
           ),
           if (!service.hasKeys)
-            MaterialPage(
-              key: const ValueKey('LoginPage'),
+            const MaterialPage(
+              key: ValueKey('LoginPage'),
               child: LoginScreen(),
             )
         ],

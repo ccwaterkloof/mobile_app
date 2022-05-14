@@ -13,7 +13,7 @@ class DatesScreen extends StatefulWidget {
   const DatesScreen({required this.onTap, Key? key}) : super(key: key);
 
   @override
-  _DatesScreenState createState() => _DatesScreenState();
+  State<DatesScreen> createState() => _DatesScreenState();
 }
 
 class _DatesScreenState extends State<DatesScreen> with TestHelper {
@@ -45,7 +45,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: 65,
                             child: Text(
                               item.date,
@@ -100,7 +100,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
       padding: const EdgeInsets.only(top: 20, bottom: 10),
       child: GestureDetector(
         onTap: () => detectSecretGesture(context),
-        child: Text("${months[month! - 1]}", style: Style.h2),
+        child: Text(months[month! - 1], style: Style.h2),
       ),
     );
   }

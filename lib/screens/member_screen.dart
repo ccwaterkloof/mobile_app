@@ -11,18 +11,20 @@ class MemberScreen extends StatelessWidget {
   final Member? member;
   final bool isTodayMember;
 
-  const MemberScreen(this.member, {required this.isTodayMember});
+  const MemberScreen(this.member, {Key? key, required this.isTodayMember})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final service = context.watch<MemberService>();
-    final _screen = MediaQuery.of(context).size;
+    final screen = MediaQuery.of(context).size;
 
     return Scaffold(
       appBar: AppBar(
         title: Text(_title!),
       ),
       body: ListView(
+        physics: const ClampingScrollPhysics(),
         children: [
           Stack(
             children: [
@@ -36,12 +38,12 @@ class MemberScreen extends StatelessWidget {
                   Container(height: 60),
                 ],
               ),
-              Container(
-                width: _screen.width,
-                height: 60 + _screen.width * 0.75,
+              SizedBox(
+                width: screen.width,
+                height: 60 + screen.width * 0.75,
                 child: AnimatedAlign(
                   curve: Curves.easeInQuad,
-                  duration: Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 500),
                   alignment: (service.nameIsReady)
                       ? Alignment.bottomLeft
                       : Alignment.center,
@@ -62,7 +64,6 @@ class MemberScreen extends StatelessWidget {
           _description(service),
           _dates(service),
         ],
-        physics: const ClampingScrollPhysics(),
       ),
     );
   }
@@ -109,7 +110,7 @@ class MemberScreen extends StatelessWidget {
             return Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(height: 25, width: 65, child: Text(item.date)),
+                SizedBox(height: 25, width: 65, child: Text(item.date)),
                 Text(item.description ?? ''),
               ],
             );

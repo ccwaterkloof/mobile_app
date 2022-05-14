@@ -72,10 +72,10 @@ class Member {
 
     final start = 'A'.codeUnitAt(0);
     final alphabet =
-        String.fromCharCodes(new Iterable.generate(26, (x) => start + x));
+        String.fromCharCodes(Iterable.generate(26, (x) => start + x));
 
     return name
-        .replaceAll(new RegExp(r"\s+"), " ")
+        .replaceAll(RegExp(r"\s+"), " ")
         .split(" ")
         .map((word) => word.trim().substring(0, 1))
         .where(alphabet.contains)
@@ -87,7 +87,7 @@ class Member {
 
   static Member? forToday(List<Member> members) {
     if (members.isEmpty) return null;
-    final theDay = new DateTime.utc(1994, DateTime.january, 8);
+    final theDay = DateTime.utc(1994, DateTime.january, 8);
     final counter = theDay.difference(DateTime.now()).inDays;
     final index = counter % members.length;
     return members[index];

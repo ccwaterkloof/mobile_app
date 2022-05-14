@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ToolTipDates extends StatelessWidget {
+  const ToolTipDates({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     const tipColor = Color(0xee303030);
@@ -10,12 +12,12 @@ class ToolTipDates extends StatelessWidget {
       child: Row(
         children: [
           Container(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
               color: tipColor,
             ),
-            child: Material(
+            child: const Material(
               type: MaterialType.transparency,
               child: Text(
                 "Pull here to see dates",
@@ -26,7 +28,7 @@ class ToolTipDates extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 10,
             height: 10,
             child: ClipPath(

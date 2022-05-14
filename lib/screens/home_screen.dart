@@ -13,8 +13,10 @@ import './index_screen.dart';
 import './member_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
 // ignore: prefer_mixin
@@ -28,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final _service = context.watch<MemberService>();
+    final service = context.watch<MemberService>();
     final width = MediaQuery.of(context).size.width;
     double sideScreenRatio;
     if (width > 700) {
@@ -52,7 +54,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
           // leftAnimationType: InnerDrawerAnimation.static, // default static
           rightAnimationType: InnerDrawerAnimation.quadratic,
-          backgroundDecoration: BoxDecoration(color: Style.colorBackground),
+          backgroundDecoration:
+              const BoxDecoration(color: Style.colorBackground),
           innerDrawerCallback: _drawerToggled,
           leftChild: IndexScreen(onTap: _selectMember),
           rightChild: DatesScreen(onTap: _selectMember),
@@ -61,22 +64,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             // InnerDrawerDirection.start - index pane
             // InnerDrawerDirection.end - dates pane
 
-            if (distance < 0.1 || _service.hasFoundDates) return;
+            if (distance < 0.1 || service.hasFoundDates) return;
 
             if (direction == InnerDrawerDirection.end) {
-              _service.hasFoundDates = true;
+              service.hasFoundDates = true;
             }
           },
           scaffold: MemberScreen(
-            _member(_service),
+            _member(service),
             isTodayMember: _showTodayMember,
           ),
         ),
         onRefresh: () async {
-          await _service.fetchMembers(isInitial: false);
+          await service.fetchMembers(isInitial: false);
         },
       ),
-      floatingActionButton: _thatButton(_service),
+      floatingActionButton: _thatButton(service),
     );
   }
 
@@ -93,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (!(service.nameIsReady)) return null;
 
     return FloatingActionButton(
-        child: new Icon(Icons.list),
+        child: const Icon(Icons.list),
         onPressed: () {
           _innerDrawerKey.currentState?.toggle();
         });
@@ -118,11 +121,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       final overlay = Overlay.of(context)!;
       final tooltipOne = OverlayEntry(
         builder: (context) {
-          return ToolTipDates();
+          return const ToolTipDates();
         },
       );
       overlay.insert(tooltipOne);
-      Future.delayed(Duration(seconds: 5), () {
+      Future.delayed(const Duration(seconds: 5), () {
         tooltipOne.remove();
       });
       return;
@@ -130,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     final snackBar = SnackBar(
       content: Text(
         message,
-        style: TextStyle(fontSize: 18),
+        style: const TextStyle(fontSize: 18),
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);

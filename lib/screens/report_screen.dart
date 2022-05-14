@@ -11,7 +11,7 @@ class ReportScreen extends StatelessWidget {
     final service = context.watch<MemberService>();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Report'),
+        title: const Text('Report'),
       ),
       body: SafeArea(
         child: Column(
@@ -41,10 +41,9 @@ abstract class TestHelper {
     int now = DateTime.now().millisecondsSinceEpoch;
     if (now - lastTestTap < 300) {
       consecutiveTestTaps++;
-      print(consecutiveTestTaps);
       if (consecutiveTestTaps > 4) {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ReportScreen();
+          return const ReportScreen();
         }));
       }
     } else {

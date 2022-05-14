@@ -28,13 +28,16 @@ class MemberService extends ChangeNotifier {
     fetchMembers();
 
     if (_hasFoundDates) return;
-    Future.delayed(Duration(seconds: 7), () {
+    Future.delayed(const Duration(seconds: 7), () {
       _feedbackStream.sink.add("tooltip1");
     });
   }
 
   static Future<MemberService> create() async {
+    print("two");
+
     final prefs = await SharedPreferences.getInstance();
+    print("three");
     return MemberService._(prefs);
   }
 
@@ -111,7 +114,7 @@ class MemberService extends ChangeNotifier {
       response = await http.get(uri);
     } catch (e) {
       // give the home screen a chance to hook to the event listener
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       _feedbackStream.sink.add("No connection to fetch the data.");
       return;
     }
@@ -141,7 +144,7 @@ class MemberService extends ChangeNotifier {
     // animation trigger
     if (!isInitial) return;
 
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       nameIsReady = true;
       notifyListeners();
     });
