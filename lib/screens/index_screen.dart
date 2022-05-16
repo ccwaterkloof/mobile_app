@@ -20,7 +20,7 @@ class IndexScreen extends StatelessWidget {
     const border = BorderSide(color: Color(0xffe6eee9));
 
     return Scaffold(
-      backgroundColor: Style.colorBackground,
+      backgroundColor: styles.colorBrand.shade50,
       body: (service.list.isEmpty)
           ? Container()
           : SafeArea(
@@ -87,7 +87,7 @@ class _NameFilterState extends State<NameFilter> {
 
   Widget _notice(MemberService service) => Container(
         padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        color: Style.colorBrand,
+        color: styles.colorBrand,
         child: Row(
           children: [
             Expanded(

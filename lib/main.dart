@@ -26,7 +26,7 @@ class CCW extends StatelessWidget {
     final service = context.watch<MemberService>();
     return MaterialApp(
       title: 'CCW Prayer',
-      theme: Style.theme,
+      theme: styles.themeLight,
       home: Navigator(
         pages: [
           const MaterialPage(

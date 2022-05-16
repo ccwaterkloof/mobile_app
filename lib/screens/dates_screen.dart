@@ -24,7 +24,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
         <MemberDate>[], (collected, item) => [...collected, ...item.dates!]);
 
     return Scaffold(
-      backgroundColor: Style.colorBackground,
+      backgroundColor: styles.colorBrand.shade50,
       body: (service.list.isEmpty)
           ? Container()
           : SafeArea(
@@ -37,7 +37,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
                   groupSeparatorBuilder: (month) =>
                       _groupHeader(context, month),
                   useStickyGroupSeparators: true, // optional
-                  stickyHeaderBackgroundColor: Style.colorBackground,
+                  stickyHeaderBackgroundColor: styles.colorBrand.shade50,
                   // floatingHeader: false,
                   itemBuilder: (context, item) => InkWell(
                     child: Padding(
@@ -100,7 +100,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
       padding: const EdgeInsets.only(top: 20, bottom: 10),
       child: GestureDetector(
         onTap: () => detectSecretGesture(context),
-        child: Text(months[month! - 1], style: Style.h2),
+        child: Text(months[month! - 1], style: styles.h2),
       ),
     );
   }

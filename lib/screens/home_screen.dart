@@ -54,8 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           ),
           // leftAnimationType: InnerDrawerAnimation.static, // default static
           rightAnimationType: InnerDrawerAnimation.quadratic,
-          backgroundDecoration:
-              const BoxDecoration(color: Style.colorBackground),
+          backgroundDecoration: BoxDecoration(color: styles.colorBrand.shade50),
           innerDrawerCallback: _drawerToggled,
           leftChild: IndexScreen(onTap: _selectMember),
           rightChild: DatesScreen(onTap: _selectMember),

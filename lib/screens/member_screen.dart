@@ -53,7 +53,7 @@ class MemberScreen extends StatelessWidget {
                       (service.nameIsReady)
                           ? "${member?.name ?? ''}\n "
                           : "Today we are praying for ...",
-                      style: Style.h2,
+                      style: styles.h2,
                       maxLines: 2,
                     ),
                   ),
@@ -104,7 +104,7 @@ class MemberScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text("Dates", style: Style.h2),
+          Text("Dates", style: styles.h2),
           const SizedBox(height: 10),
           ...member!.dates!.map((item) {
             return Row(

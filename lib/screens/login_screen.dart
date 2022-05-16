@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/member_service.dart';
-import '../stylesheet.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -73,13 +72,17 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget get _feedbackRow {
+    const styleFeedback = TextStyle(color: Color(0xfff06060));
     switch (_status) {
       case LoginStatus.fail:
-        return const Text("Nope. Try again.", style: Style.styleFeedback);
+        return const Text(
+          "Nope. Try again.",
+          style: styleFeedback,
+        );
       case LoginStatus.technicalError:
         return const Text(
           "Erm... we had some difficulty verifying that.\nPlease try again.",
-          style: Style.styleFeedback,
+          style: styleFeedback,
         );
       case LoginStatus.checking:
         return const Text("Let me check that.");
