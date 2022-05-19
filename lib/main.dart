@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import "./screens/home_screen.dart";
-import "./screens/login_screen.dart";
-import './services/member_service.dart';
+import 'package:ccw/onboarding/login_screen.dart';
+import 'package:ccw/members/home_screen.dart';
+import 'members/member_service.dart';
 import 'stylesheet.dart';
 
 Future<void> main() async {

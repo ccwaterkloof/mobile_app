@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
 import 'package:provider/provider.dart';
 
-import '../components/tooltips.dart';
-import '../models.dart';
-import '../services/member_service.dart';
+import 'package:ccw/onboarding/tooltips.dart';
+import 'models.dart';
+import 'member_service.dart';
 import '../stylesheet.dart';
 import './dates_screen.dart';
 import './index_screen.dart';

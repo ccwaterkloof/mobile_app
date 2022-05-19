@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:ccw/services/member_service.dart';
+import 'package:ccw/members/member_service.dart';
 
 class ReportScreen extends StatelessWidget {
   const ReportScreen({Key? key}) : super(key: key);

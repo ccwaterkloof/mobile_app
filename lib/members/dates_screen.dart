@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
 
-import '../models.dart';
-import '../services/member_service.dart';
+import 'models.dart';
+import 'member_service.dart';
 import '../stylesheet.dart';
-import './report_screen.dart';
+import '../report/report_screen.dart';
 
 class DatesScreen extends StatefulWidget {
   final Function onTap;

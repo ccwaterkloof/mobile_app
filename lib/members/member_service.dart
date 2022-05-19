@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models.dart';
+import 'models.dart';
 
 class MemberService extends ChangeNotifier {
   final _apiAuthority = "trello.com";

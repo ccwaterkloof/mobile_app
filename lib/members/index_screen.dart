@@ -1,6 +1,6 @@
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import '../services/member_service.dart';
+import 'member_service.dart';
 import '../stylesheet.dart';
 
 class IndexScreen extends StatelessWidget {
@@ -93,11 +93,15 @@ class _NameFilterState extends State<NameFilter> {
             Expanded(
               child: Text(
                 'All names with "${service.searchFilter}"',
-                style: const TextStyle(fontSize: 20),
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                ),
               ),
             ),
             IconButton(
               icon: const Icon(Icons.close),
+              color: Colors.white,
               onPressed: () {
                 setState(() {
                   _filter = 0;
