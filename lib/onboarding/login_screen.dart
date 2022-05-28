@@ -1,21 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../members/member_service.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+import 'package:ccw/onboarding/onboard_manager.dart';
+import 'package:ccw/services/service_locator.dart';
 
-  @override
-  State<LoginScreen> createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _password = TextEditingController();
-  late MemberService _service;
-  LoginStatus _status = LoginStatus.ready;
+class LoginScreen extends StatelessWidget with GetItMixin {
+  LoginScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final status = watchX((OnboardManager m) => m.loginStatus);
+
     return Material(
       child: SafeArea(
         child: Container(
@@ -34,13 +29,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   "please enter it here to unlock the app."),
               const SizedBox(height: 20),
               TextField(
-                controller: _password,
+                controller: locator<OnboardManager>().password,
                 obscureText: true,
                 autocorrect: false,
               ),
               const SizedBox(height: 20),
               ElevatedButton(
-                onPressed: (_status == LoginStatus.checking) ? null : _tryLogin,
+                onPressed: (status == LoginStatus.checking)
+                    ? null
+                    : locator<OnboardManager>().tryLogin,
                 child: const Text('Unlock'),
               ),
               const SizedBox(height: 20),
@@ -52,28 +49,11 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future _tryLogin() async {
-    setState(() {
-      _status = LoginStatus.checking;
-    });
-
-    try {
-      await _service.login(_password.text);
-      // Navigator.pop  // nav 1.0
-    } on FourOhOneError {
-      setState(() {
-        _status = LoginStatus.fail;
-      });
-    } catch (e) {
-      setState(() {
-        _status = LoginStatus.technicalError;
-      });
-    }
-  }
-
   Widget get _feedbackRow {
+    final status = locator<OnboardManager>().loginStatus.value;
     const styleFeedback = TextStyle(color: Color(0xfff06060));
-    switch (_status) {
+
+    switch (status) {
       case LoginStatus.fail:
         return const Text(
           "Nope. Try again.",
@@ -90,14 +70,4 @@ class _LoginScreenState extends State<LoginScreen> {
         return Container();
     }
   }
-
-  @override
-  void initState() {
-    super.initState();
-    Future.delayed(Duration.zero, () {
-      _service = context.read<MemberService>();
-    });
-  }
 }
-
-enum LoginStatus { ready, checking, fail, technicalError }

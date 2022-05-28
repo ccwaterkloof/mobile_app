@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-import 'package:ccw/members/member_service.dart';
+import 'package:ccw/members/member_manager.dart';
 
-class ReportScreen extends StatelessWidget {
-  const ReportScreen({Key? key}) : super(key: key);
+class ReportScreen extends StatelessWidget with GetItMixin {
+  ReportScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
+    final manager = watchOnly((MemberManager m) => m);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Report'),
@@ -18,10 +18,10 @@ class ReportScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: service.reportList.length,
+                itemCount: manager.reportList.length,
                 itemBuilder: (context, i) {
                   return ListTile(
-                    title: Text(service.reportList[i].title),
+                    title: Text(manager.reportList[i].title),
                   );
                 },
               ),
@@ -33,22 +33,37 @@ class ReportScreen extends StatelessWidget {
   }
 }
 
-abstract class TestHelper {
+class ReportGesture extends StatefulWidget {
+  final Widget child;
+
+  const ReportGesture({required this.child, Key? key}) : super(key: key);
+
+  @override
+  State<ReportGesture> createState() => _ReportGestureState();
+}
+
+class _ReportGestureState extends State<ReportGesture> {
   int lastTestTap = DateTime.now().millisecondsSinceEpoch;
   int consecutiveTestTaps = 0;
 
-  void detectSecretGesture(BuildContext context) {
-    int now = DateTime.now().millisecondsSinceEpoch;
-    if (now - lastTestTap < 300) {
-      consecutiveTestTaps++;
-      if (consecutiveTestTaps > 4) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return const ReportScreen();
-        }));
-      }
-    } else {
-      consecutiveTestTaps = 0;
-    }
-    lastTestTap = now;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        int now = DateTime.now().millisecondsSinceEpoch;
+        if (now - lastTestTap < 300) {
+          consecutiveTestTaps++;
+          if (consecutiveTestTaps > 4) {
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return ReportScreen();
+            }));
+          }
+        } else {
+          consecutiveTestTaps = 0;
+        }
+        lastTestTap = now;
+      },
+      child: widget.child,
+    );
   }
 }

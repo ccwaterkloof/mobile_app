@@ -1,31 +1,23 @@
+import 'package:ccw/services/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:grouped_list/grouped_list.dart';
-import 'package:provider/provider.dart';
 
-import 'models.dart';
-import 'member_service.dart';
-import '../stylesheet.dart';
-import '../report/report_screen.dart';
+import 'package:ccw/members/member_manager.dart';
+import 'package:ccw/models/member.dart';
+import 'package:ccw/stylesheet.dart';
+import 'package:ccw/report/report_screen.dart';
 
-class DatesScreen extends StatefulWidget {
-  final Function onTap;
+class DatesScreen extends StatelessWidget with GetItMixin {
+  DatesScreen({Key? key}) : super(key: key);
 
-  const DatesScreen({required this.onTap, Key? key}) : super(key: key);
-
-  @override
-  State<DatesScreen> createState() => _DatesScreenState();
-}
-
-class _DatesScreenState extends State<DatesScreen> with TestHelper {
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
-    final dates = service.list.fold<List<MemberDate>>(
-        <MemberDate>[], (collected, item) => [...collected, ...item.dates!]);
+    final dates = watchOnly((MemberManager m) => m.allDates);
 
     return Scaffold(
       backgroundColor: styles.colorBrand.shade50,
-      body: (service.list.isEmpty)
+      body: (dates.isEmpty)
           ? Container()
           : SafeArea(
               child: Padding(
@@ -60,24 +52,13 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
                         ],
                       ),
                     ),
-                    onTap: () => notifyTap(item, service),
+                    onTap: () =>
+                        locator<MemberManager>().selectMemberFromDate(item),
                   ),
                 ),
               ),
             ),
     );
-  }
-
-  void notifyTap(MemberDate item, MemberService service) {
-    // find the member
-    for (final member in service.list) {
-      for (final loopItem in member.dates!) {
-        if (loopItem.isSameAs(item)) {
-          widget.onTap(member);
-          return;
-        }
-      }
-    }
   }
 
   Widget _groupHeader(BuildContext context, int? month) {
@@ -98,8 +79,7 @@ class _DatesScreenState extends State<DatesScreen> with TestHelper {
 
     return Container(
       padding: const EdgeInsets.only(top: 20, bottom: 10),
-      child: GestureDetector(
-        onTap: () => detectSecretGesture(context),
+      child: ReportGesture(
         child: Text(months[month! - 1], style: styles.h2),
       ),
     );

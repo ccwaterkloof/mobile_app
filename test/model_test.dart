@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:test/test.dart';
-import 'package:ccw/members/models.dart';
+import 'package:ccw/models/member.dart';
 
 void main() {
   group('Name', () {

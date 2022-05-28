@@ -1,36 +1,37 @@
 import 'dart:async';
 
+import 'package:ccw/services/store_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inner_drawer/inner_drawer.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
+import 'package:ccw/members/member_manager.dart';
+import 'package:ccw/services/service_locator.dart';
 import 'package:ccw/onboarding/tooltips.dart';
-import 'models.dart';
-import 'member_service.dart';
-import '../stylesheet.dart';
-import './dates_screen.dart';
-import './index_screen.dart';
-import './member_screen.dart';
+import 'package:ccw/stylesheet.dart';
+import 'package:ccw/members/dates_screen.dart';
+import 'package:ccw/members/index_screen.dart';
+import 'package:ccw/members/member_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends StatefulWidget with GetItStatefulWidgetMixin {
+  HomeScreen({Key? key}) : super(key: key);
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
 // ignore: prefer_mixin
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen>
+    with GetItStateMixin, WidgetsBindingObserver {
   WidgetsBinding? binding = WidgetsBinding.instance;
-  final _innerDrawerKey = GlobalKey<InnerDrawerState>();
-  final _scaffoldKey = GlobalKey<ScaffoldState>();
-  Member? _selectedMember;
-  bool _memberListIsOpen = false;
-  StreamSubscription<String>? _feedbackSubscription;
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
+    final manager = watchOnly((MemberManager m) => m);
+    final hideFab = watchOnly((MemberManager m) => m.hideFab);
+
+    registerHandler((MemberManager m) => m.feedback, _handleFeedback);
+
     final width = MediaQuery.of(context).size.width;
     double sideScreenRatio;
     if (width > 700) {
@@ -40,10 +41,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
 
     return Scaffold(
-      key: _scaffoldKey,
+      key: GlobalKey<ScaffoldState>(),
       body: RefreshIndicator(
+        onRefresh: manager.refreshList,
         child: InnerDrawer(
-          key: _innerDrawerKey,
+          key: locator<MemberManager>().innerDrawerKey,
           colorTransitionScaffold: Colors.white.withOpacity(0),
           onTapClose: true, // default false
           // swipe: true, // default true
@@ -55,67 +57,37 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           // leftAnimationType: InnerDrawerAnimation.static, // default static
           rightAnimationType: InnerDrawerAnimation.quadratic,
           backgroundDecoration: BoxDecoration(color: styles.colorBrand.shade50),
-          innerDrawerCallback: _drawerToggled,
-          leftChild: IndexScreen(onTap: _selectMember),
-          rightChild: DatesScreen(onTap: _selectMember),
+          innerDrawerCallback: manager.drawerToggled,
+          leftChild: IndexScreen(),
+          rightChild: DatesScreen(),
           onDragUpdate: (distance, direction) {
             // print("distance: $distance,  direction $direction");
             // InnerDrawerDirection.start - index pane
             // InnerDrawerDirection.end - dates pane
+            final service = locator<StoreService>();
 
             if (distance < 0.1 || service.hasFoundDates) return;
 
             if (direction == InnerDrawerDirection.end) {
-              service.hasFoundDates = true;
+              service.setHasFoundDates(true);
             }
           },
-          scaffold: MemberScreen(
-            _member(service),
-            isTodayMember: _showTodayMember,
-          ),
+          scaffold: MemberScreen(),
         ),
-        onRefresh: () async {
-          await service.fetchMembers(isInitial: false);
-        },
       ),
-      floatingActionButton: _thatButton(service),
+      floatingActionButton: hideFab
+          ? null
+          : FloatingActionButton(
+              onPressed: manager.toggleDrawer,
+              child: const Icon(Icons.list),
+            ),
     );
   }
 
-  void _selectMember(member) {
-    setState(() {
-      _selectedMember = member;
-      _innerDrawerKey.currentState?.toggle();
-    });
-  }
+  void _handleFeedback(
+      BuildContext context, String? message, void Function() cancel) {
+    if (message?.isEmpty ?? true) return;
 
-  Widget? _thatButton(MemberService service) {
-    if (_memberListIsOpen) return null;
-
-    if (!(service.nameIsReady)) return null;
-
-    return FloatingActionButton(
-        child: const Icon(Icons.list),
-        onPressed: () {
-          _innerDrawerKey.currentState?.toggle();
-        });
-  }
-
-  bool get _showTodayMember => _selectedMember == null;
-
-  Member? _member(MemberService service) {
-    if (!_showTodayMember) return _selectedMember;
-    final member = Member.forToday(service.list);
-    return member;
-  }
-
-  Future<void> _drawerToggled(bool wasOpened) async {
-    setState(() {
-      _memberListIsOpen = wasOpened;
-    });
-  }
-
-  void onFeedback(String message) {
     if (message == "tooltip1") {
       final overlay = Overlay.of(context)!;
       final tooltipOne = OverlayEntry(
@@ -131,37 +103,29 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
     final snackBar = SnackBar(
       content: Text(
-        message,
+        message ?? "",
         style: const TextStyle(fontSize: 18),
       ),
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-    // _scaffoldKey.currentState!.showSnackBar();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state != AppLifecycleState.resumed) return;
 
-    setState(() {
-      _selectedMember = null;
-    });
+    locator<MemberManager>().startOver();
   }
 
   @override
   void initState() {
     super.initState();
     binding!.addObserver(this);
-    Future.delayed(Duration.zero, () async {
-      final service = context.read<MemberService>();
-      _feedbackSubscription = service.feedbackStream.listen(onFeedback);
-    });
   }
 
   @override
   void dispose() {
     binding!.removeObserver(this);
-    _feedbackSubscription?.cancel();
     super.dispose();
   }
 }

@@ -1,22 +1,19 @@
-import 'package:provider/provider.dart';
-import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:date_format/date_format.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-import 'models.dart';
-import 'member_service.dart';
-import '../stylesheet.dart';
+import 'package:ccw/members/member_manager.dart';
+import 'package:ccw/services/service_locator.dart';
+import 'package:ccw/stylesheet.dart';
 
-class MemberScreen extends StatelessWidget {
-  final Member? member;
-  final bool isTodayMember;
-
-  const MemberScreen(this.member, {Key? key, required this.isTodayMember})
-      : super(key: key);
+class MemberScreen extends StatelessWidget with GetItMixin {
+  MemberScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
+    final member = watchOnly((MemberManager m) => m.memberToShow);
+    final nameIsReady = watchOnly((MemberManager m) => m.nameIsReady);
     final screen = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -44,13 +41,12 @@ class MemberScreen extends StatelessWidget {
                 child: AnimatedAlign(
                   curve: Curves.easeInQuad,
                   duration: const Duration(milliseconds: 500),
-                  alignment: (service.nameIsReady)
-                      ? Alignment.bottomLeft
-                      : Alignment.center,
+                  alignment:
+                      nameIsReady ? Alignment.bottomLeft : Alignment.center,
                   child: Padding(
                     padding: const EdgeInsets.only(left: 20, right: 20),
                     child: Text(
-                      (service.nameIsReady)
+                      nameIsReady
                           ? "${member?.name ?? ''}\n "
                           : "Today we are praying for ...",
                       style: styles.h2,
@@ -61,22 +57,30 @@ class MemberScreen extends StatelessWidget {
               ),
             ],
           ),
-          _description(service),
-          _dates(service),
+          _description,
+          _dates,
         ],
       ),
     );
   }
 
   String? get _title {
+    final manager = locator<MemberManager>();
+    final member = manager.memberToShow;
+
     if (member == null) return "";
 
     final today = DateTime.now();
-    if (isTodayMember) return formatDate(today, [DD, ', ', d, ' ', MM]);
-    return member!.title;
+    if (manager.showTodayMember) {
+      return formatDate(today, [DD, ', ', d, ' ', MM]);
+    }
+
+    return member.title;
   }
 
   Widget get _image {
+    final member = locator<MemberManager>().memberToShow;
+
     if (member?.imageUrl == null) return Container();
 
     return CachedNetworkImage(
@@ -85,8 +89,11 @@ class MemberScreen extends StatelessWidget {
     );
   }
 
-  Widget _description(MemberService service) {
-    if (!service.nameIsReady) return Container();
+  Widget get _description {
+    final manager = locator<MemberManager>();
+    final member = locator<MemberManager>().memberToShow;
+
+    if (!manager.nameIsReady) return Container();
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 40),
@@ -94,9 +101,14 @@ class MemberScreen extends StatelessWidget {
     );
   }
 
-  Widget _dates(MemberService service) {
-    if (isTodayMember) return Container();
-    if (!service.nameIsReady) return Container();
+  Widget get _dates {
+    final manager = locator<MemberManager>();
+    final member = locator<MemberManager>().memberToShow;
+
+    if (manager.showTodayMember) return Container();
+
+    if (!manager.nameIsReady) return Container();
+
     if (member?.dates?.isEmpty ?? true) return Container();
 
     return Padding(

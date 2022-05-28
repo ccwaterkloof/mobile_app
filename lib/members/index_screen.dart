@@ -1,16 +1,18 @@
-import 'package:provider/provider.dart';
+import 'package:ccw/services/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'member_service.dart';
-import '../stylesheet.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
-class IndexScreen extends StatelessWidget {
-  final Function onTap;
+import 'package:ccw/members/member_filter.dart';
+import 'package:ccw/members/member_manager.dart';
+import 'package:ccw/stylesheet.dart';
 
-  const IndexScreen({required this.onTap, Key? key}) : super(key: key);
+class IndexScreen extends StatelessWidget with GetItMixin {
+  IndexScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
+    // rebuild on notifyListeners:
+    final memberList = watchOnly((MemberManager x) => x.memberList);
 
     final heroStyle = Theme.of(context).textTheme.headline6!.copyWith(
           fontSize: 16,
@@ -21,7 +23,7 @@ class IndexScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: styles.colorBrand.shade50,
-      body: (service.list.isEmpty)
+      body: (memberList.isEmpty)
           ? Container()
           : SafeArea(
               child: Column(
@@ -30,9 +32,9 @@ class IndexScreen extends StatelessWidget {
                     child: ListView.builder(
                       // physics: const ClampingScrollPhysics(),
                       padding: const EdgeInsets.all(10),
-                      itemCount: service.list.length,
+                      itemCount: memberList.length,
                       itemBuilder: (context, index) {
-                        final member = service.list[index];
+                        final member = memberList[index];
                         return InkWell(
                           child: Container(
                             decoration: const BoxDecoration(
@@ -54,104 +56,16 @@ class IndexScreen extends StatelessWidget {
                             ),
                           ),
                           onTap: () {
-                            onTap(member);
+                            locator<MemberManager>().selectMember(member);
                           },
                         );
                       },
                     ),
                   ),
-                  const NameFilter()
+                  MemberFilter()
                 ],
               ),
             ),
     );
-  }
-}
-
-class NameFilter extends StatefulWidget {
-  const NameFilter({Key? key}) : super(key: key);
-
-  @override
-  State<NameFilter> createState() => _NameFilterState();
-}
-
-class _NameFilterState extends State<NameFilter> {
-  int? _filter;
-  @override
-  Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
-    if (service.searchFilter.isNotEmpty) return _notice(service);
-
-    return _slider(service);
-  }
-
-  Widget _notice(MemberService service) => Container(
-        padding: const EdgeInsets.fromLTRB(10, 5, 10, 5),
-        color: styles.colorBrand,
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(
-                'All names with "${service.searchFilter}"',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              color: Colors.white,
-              onPressed: () {
-                setState(() {
-                  _filter = 0;
-                });
-                service.searchFilter = "";
-              },
-            ),
-          ],
-        ),
-      );
-
-  Widget _slider(MemberService service) {
-    final max =
-        (service.searchKeys.isEmpty) ? 0 : service.searchKeys.length - 1;
-    return Row(
-      children: [
-        Expanded(
-          child: SliderTheme(
-            data: const SliderThemeData(
-              // valueIndicatorColor: Colors.white,
-              valueIndicatorTextStyle: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-            child: Slider(
-              max: max.toDouble(),
-              value: _filter?.toDouble() ?? 0.0,
-              label: label(service),
-              onChanged: (newValue) {
-                setState(() {
-                  _filter = newValue.round();
-                });
-              },
-              onChangeEnd: (newValue) {
-                service.searchFilter = label(service);
-              },
-              divisions: 26,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  String label(MemberService service) {
-    if (_filter == null ||
-        _filter! < 0 ||
-        _filter! > service.searchKeys.length - 1) return "";
-
-    return service.searchKeys[_filter!];
   }
 }

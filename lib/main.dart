@@ -1,41 +1,36 @@
+import 'package:ccw/onboarding/onboard_manager.dart';
+import 'package:ccw/services/service_locator.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:get_it_mixin/get_it_mixin.dart';
 
 import 'package:ccw/onboarding/login_screen.dart';
 import 'package:ccw/members/home_screen.dart';
-import 'members/member_service.dart';
 import 'stylesheet.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final service = await MemberService.create();
-  runApp(
-    ChangeNotifierProvider<MemberService>(
-      create: (_) => service,
-      lazy: false,
-      child: const CCW(),
-    ),
-  );
+  await registerServices();
+  runApp(CCW());
 }
 
-class CCW extends StatelessWidget {
-  const CCW({Key? key}) : super(key: key);
+class CCW extends StatelessWidget with GetItMixin {
+  CCW({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final service = context.watch<MemberService>();
+    final isSignedIn = watchX((OnboardManager m) => m.isSignedIn);
     return MaterialApp(
       title: 'CCW Prayer',
       theme: styles.themeLight,
       home: Navigator(
         pages: [
-          const MaterialPage(
-            key: ValueKey('HomePage'),
+          MaterialPage(
+            key: const ValueKey('HomePage'),
             child: HomeScreen(),
           ),
-          if (!service.hasKeys)
-            const MaterialPage(
-              key: ValueKey('LoginPage'),
+          if (!isSignedIn)
+            MaterialPage(
+              key: const ValueKey('LoginPage'),
               child: LoginScreen(),
             )
         ],
